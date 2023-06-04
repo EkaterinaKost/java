@@ -13,10 +13,10 @@ package oop_les_1.task_2;
 Метод "вычислить периметр" (calculatePerimeter), который возвращает 
 периметр прямоугольника (2 * (ширина + высота)). */
 
-public class Rectangle {
+public class Rectangle implements I_Oper {
     private int width;
     private int height;
-
+   
     public Rectangle(int width, int height) {
         this.width = width;
         this.height = height;
@@ -45,10 +45,13 @@ public class Rectangle {
     public void setHeight(int height) {
         this.height = height;
     }
-    public void calculateArea() {
-        System.out.printf("Площадь прямоугольника %dх%d: %d\n", width, height, width * height);
+    @Override
+    public int calculateArea() {
+        int area =  width * height;
+       System.out.printf("Площадь прямоугольника %dх%d: %d\n", width, height, area);
+      return area;
     }
-
+    @Override
     public void calculatePerimeter() {
         System.out.printf("Периметр прямоугольника %dх%d: %d\n", width, height, 2 * (width + height));
     }
