@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .slider {
+            border: 2px solid rgb(22, 48, 241);
+            width: max-content;
+            padding: 10px 20px;
+            background: #3ee1f0;
+        }
+
+        .current-image{
+            width: 500px;
+            text-align: center;
+        }
+
+        .current-image img {
+            width: 100px;
+            height: 60px;
+        }  
+        
+        .active {
+            background: #DCE1ED;
+        }
+
+        .container img {
+            width: 500px;
+            height: 312px;
+            margin-top: 20px;
+        }
+
+        .btn-wrap {
+            width: 500px;
+            text-align: center;
+        }
+
+        .btn-wrap button {
+            height: 40px;
+            background: hwb(247 13% 6%);
+            color: white;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="slider">
+        <div class="btn-wrap">
+            <button class="previous-img"> << </button>
+            <button class="next-img"> >> </button>
+        </div>
+        <div class="container">
+            <img src="https://avatars.mds.yandex.net/i?id=3dad2725d26e1e699df2943c2a52249a0a87190e-12421956-images-thumbs&n=13"
+                alt="">
+        </div>
+        <div class="current-image">
+            <img src="https://avatars.mds.yandex.net/i?id=3dad2725d26e1e699df2943c2a52249a0a87190e-12421956-images-thumbs&n=13"
+                alt="">
+            <img src="https://avatars.mds.yandex.net/i?id=23ea857fd4bf80e2b0153f66d83dbc17571246ec-11543356-images-thumbs&n=13"
+                alt="">
+            <img src="https://img2.joyreactor.cc/pics/post/full/%D0%BA%D1%80%D0%B0%D1%81%D0%B8%D0%B2%D1%8B%D0%B5-%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD%D0%BA%D0%B8-%D0%9F%D1%80%D0%B8%D1%80%D0%BE%D0%B4%D0%B0-%D1%80%D0%B5%D0%BA%D0%B0-1105667.jpeg"
+                alt="">
+            <img src="https://i.yapx.cc/Q9kZZ.jpg"
+                alt="">
+        </div>
+    </section>
+
+
+    <script>
+        const btnPreviousImg = document.querySelector('.previous-img');
+        const btnNextImg = document.querySelector('.next-img');
+        const container = document.querySelector('.container');
+        const currentImage = document.querySelector('.current-image');
+
+        let index = 0;
+
+        btnPreviousImg.addEventListener("click", () => {
+            if (index === 0) {
+                index = currentImage.children.length;
+            }
+            index--;
+            wiewImg(index);
+        })
+
+        btnNextImg.addEventListener("click", () => {
+            if (index === currentImage.children.length - 1) {
+                index = -1;
+            }
+            index++;
+            wiewImg(index);
+        })
+
+        const wiewImg = (index) => {
+            container.children[0].src = currentImage.children.item(index).src;
+        }
+
+        for (let i = 0; i < currentImage.children.length; i++) {
+            currentImage.children[i].addEventListener("click", (el) => {
+                container.children[0].src = el.target.src;
+                index = i;
+            })
+        }
+    </script>
+
+</body>
+
+</html>
