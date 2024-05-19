@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .center {
+            padding-left: calc(50% - 1200px / 2);
+            padding-right: calc(50% - 1200px / 2);
+        }
+
+        .photo-gallery {
+            padding-top: 30px;
+            text-align: center;
+
+            &__title {
+                font-size: 38px;
+            }
+
+            &__menu {
+                font-size: 20px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+
+                & input {
+                    font-size: 15px;
+                    text-align: center;
+                    width: 60px;
+                    height: 20px;
+                }
+            }
+
+            &__list {
+                display: flex;
+                text-align: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            &__item {
+                overflow: hidden;
+                background: #eaeaea;
+                border-radius: 20px;
+
+                &-wrap {
+                    width: calc((1200px - 30px) / 3);
+                    height: 350px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                &-img {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                }
+
+                &-info {
+                    font-size: 20px;
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
+
+                    & .fa {
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            &__name-photographer {
+                text-align: left;
+                width: 150px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                font-size: 20px;
+            }
+        }
+
+        .like {
+            width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="center photo-gallery">
+        <h1 class="photo-gallery__title">Фотогаллерея</h1>
+        <div class="photo-gallery__menu">
+            <p>
+                Количество фотографий за 1 загрузку
+                <input id="quantity" type="number" min="9" step="9" value="9">
+            </p>
+        </div>
+        <div class="photo-gallery__list"></div>
+    </section>
+    <script>
+        import { acessKey } from './acessKey.js';
+
+        const photoGalleryTable = document.querySelector('.photo-gallery__list');
+        const quantity = document.querySelector('#quantity');
+
+        let number = 1;
+
+        // Для загрузки фотографий необходимо ввести сгенерированный acess key
+        const acessKeyIm = acessKey;
+
+        quantity.addEventListener("change", () => {
+            loadMorePhotos(quantity.value);
+        });
+
+        async function fetchPhotos(numberPage, quantity) {
+            try {
+                const response = await fetch(`https://api.unsplash.com/photos?page=${numberPage}&per_page=${quantity}&client_id=${acessKeyIm}`);
+                const photos = await response.json();
+                return photos;
+            } catch (error) {
+                console.error('Ошибка при загрузке фотографий:', error);
+                return [];
+            }
+        }
+
+        async function loadMorePhotos(quantityPhoto) {
+            fetchPhotos(number, quantityPhoto).then((photos) => {
+                photos.forEach(photo => {
+                    photoGalleryTable.innerHTML += `
+         <div class="photo-gallery__item">
+            <div class="photo-gallery__item-wrap">
+               <img class="photo-gallery__item-img" src="${photo.urls.small}">
+            </div>
+            <div class="photo-gallery__item-info">
+               <p class="photo-gallery__name-photographer">Фотограф: ${photo.user.name}</p>
+               <div class="like">
+                  <i onClick="countUp(this)" class="fa fa-thumbs-up"></i>
+                  <p class="count">0</p>
+                  <i onClick="countDown(this)" class="fa fa-thumbs-down"></i>
+               </div>
+            </div>
+         </div>
+         `
+                });
+            });
+            number++;
+        }
+
+        function countUp(element) {
+            let btnLike = element.parentElement.querySelector(".count");
+            let count = Number.parseInt(btnLike.textContent);
+            count++;
+            showCount(btnLike, count);
+        }
+
+        function countDown(element) {
+            let btnLike = element.parentElement.querySelector(".count");
+            let count = Number.parseInt(btnLike.textContent);
+            count--;
+            showCount(btnLike, count);
+        }
+
+        function showCount(btnLike, count) {
+            btnLike.textContent = count;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                loadMorePhotos(quantity.value);
+            }
+        });
+
+        // Загрузка первой партии фотографий при загрузке страницы
+        loadMorePhotos(quantity.value);
+    </script>
+
+</body>
+
+</html>
