@@ -1,0 +1,23 @@
+.temperature-converter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+  }
+  
+  .temperature-input {
+    width: 200px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+
+  .temperature-input:last-child {
+    margin-bottom: 0;
+  }
+  
+  .temperature-input:nth-child(2) {
+    margin-top: 20px;
+    
+  }
+ 
+ 
